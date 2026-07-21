@@ -1,0 +1,164 @@
+ &initialization_parameters
+!-- RESTART (continuation) namelist: identical to _p3d but initializing_actions = read_restart_data. See README.
+         nx = 799, ny = 639, nz = 640,          ! 1260 x 1008 x 1008 m
+         dx = 1.575, dy = 1.575, dz = 1.575,
+
+         bc_lr = 'dirichlet/radiation',         ! fixed inflow at x=0, radiation outflow
+         bc_ns = 'cyclic',
+         psolver = 'multigrid',                 ! lateral BC is non-cyclic in x
+
+!-- Laminar: neutral, no Coriolis, no perturbations, free-slip top/bottom.
+         neutral = .T.,
+         omega   = 0.0,
+         constant_flux_layer = .F.,
+         bc_uv_b = 'neumann',
+         bc_uv_t = 'neumann',
+
+         initializing_actions = 'read_restart_data',
+         ug_surface = 11.4, vg_surface = 0.0,
+
+!-- Power-law shear referenced to the hub: U(z) = 11.4*((z-414)/90)^0.143, i.e. Uref = 11.4 m/s at
+!-- the hub z = 504 m, which sits 90 m (the NREL 5 MW hub height) above the virtual ground at
+!-- z = 504-90 = 414 m; uniform 6.6145 m/s below 2 m above that ground. PALM requires the surface
+!-- table value to be zero (PAC0061), so the table starts at u = 0 at z = 0 and reaches the slab
+!-- value one grid spacing up (1.575 m). Fine near the virtual ground
+!-- and across the rotor (441/504/567 m are table nodes); PALM caps the arrays at 200 entries and
+!-- interpolates it to every grid level.
+         uv_heights = 0, 1.575, 204.75, 409.5, 411.075, 412.65, 414.225, 415.8, 417.375, 418.95,
+                      420.525, 422.1, 423.675, 425.25, 426.825, 428.4, 429.975, 431.55, 433.125, 434.7,
+                      436.275, 437.85, 439.425, 441, 442.575, 444.15, 445.725, 447.3, 448.875, 450.45,
+                      452.025, 453.6, 455.175, 456.75, 458.325, 459.9, 461.475, 463.05, 464.625, 466.2,
+                      467.775, 469.35, 470.925, 472.5, 474.075, 475.65, 477.225, 478.8, 480.375, 481.95,
+                      483.525, 485.1, 486.675, 488.25, 489.825, 491.4, 492.975, 494.55, 496.125, 497.7,
+                      499.275, 500.85, 502.425, 504, 505.575, 507.15, 508.725, 510.3, 511.875, 513.45,
+                      515.025, 516.6, 518.175, 519.75, 521.325, 522.9, 524.475, 526.05, 527.625, 529.2,
+                      530.775, 532.35, 533.925, 535.5, 537.075, 538.65, 540.225, 541.8, 543.375, 544.95,
+                      546.525, 548.1, 549.675, 551.25, 552.825, 554.4, 555.975, 557.55, 559.125, 560.7,
+                      562.275, 563.85, 565.425, 567, 568.575, 570.15, 571.725, 573.3, 574.875, 576.45,
+                      578.025, 579.6, 581.175, 582.75, 584.325, 585.9, 592.2, 604.8, 617.4, 630,
+                      642.6, 655.2, 667.8, 680.4, 693, 705.6, 718.2, 730.8, 743.4, 756,
+                      768.6, 781.2, 793.8, 806.4, 819, 831.6, 844.2, 856.8, 869.4, 882,
+                      894.6, 907.2, 919.8, 932.4, 945, 957.6, 970.2, 982.8, 995.4, 1008,
+         u_profile = 0, 6.6145, 6.6145, 6.6145, 6.6145, 6.6145, 6.6145, 6.6145, 7.12839, 7.52968,
+                     7.83309, 8.07907, 8.28698, 8.46765, 8.62781, 8.77191, 8.90308, 9.0236, 9.13518, 9.23915,
+                     9.33654, 9.4282, 9.51482, 9.59695, 9.67507, 9.74959, 9.82084, 9.88912, 9.95469, 10.01777,
+                     10.07855, 10.13721, 10.19391, 10.24878, 10.30194, 10.3535, 10.40358, 10.45224, 10.49959, 10.54569,
+                     10.59061, 10.63442, 10.67718, 10.71893, 10.75973, 10.79962, 10.83865, 10.87686, 10.91427, 10.95094,
+                     10.98688, 11.02213, 11.05672, 11.09067, 11.12401, 11.15676, 11.18895, 11.22059, 11.2517, 11.28231,
+                     11.31242, 11.34207, 11.37126, 11.4, 11.42832, 11.45622, 11.48372, 11.51083, 11.53757, 11.56394,
+                     11.58995, 11.61562, 11.64095, 11.66595, 11.69064, 11.71502, 11.7391, 11.76289, 11.78639, 11.80962,
+                     11.83257, 11.85526, 11.8777, 11.89988, 11.92182, 11.94352, 11.96498, 11.98622, 12.00723, 12.02802,
+                     12.0486, 12.06898, 12.08915, 12.10912, 12.12889, 12.14847, 12.16787, 12.18708, 12.20611, 12.22497,
+                     12.24365, 12.26216, 12.28051, 12.2987, 12.31672, 12.33459, 12.3523, 12.36987, 12.38728, 12.40455,
+                     12.42168, 12.43867, 12.45551, 12.47223, 12.48881, 12.50526, 12.56979, 12.69319, 12.8098, 12.92037,
+                     13.02555, 13.12587, 13.2218, 13.31372, 13.402, 13.48692, 13.56875, 13.64773, 13.72406, 13.79793,
+                     13.8695, 13.93892, 14.00634, 14.07186, 14.1356, 14.19766, 14.25815, 14.31713, 14.37469, 14.4309,
+                     14.48583, 14.53953, 14.59208, 14.64351, 14.69389, 14.74325, 14.79164, 14.83909, 14.88566, 14.93137,
+         v_profile = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         /
+
+ &runtime_parameters
+         end_time = 300.0,                     ! ~2.7 domain flow-throughs
+         create_disturbances = .F.,
+         dt_run_control = 0.0,                  ! RUN_CONTROL written every timestep
+         npex = 50, npey = 40,                  ! 2000 ranks; subdomains 16 x 16 (multigrid-friendly)
+
+!-- Restart driven by the job wall-clock limit, not a fixed model time. PALM leaves the time loop and
+!-- writes a restart once the wall-clock left in the job (maximum_cpu_time_allowed, from palmrun -t)
+!-- drops to within termination_time_needed; 600 s is reserved here for writing the restart files.
+!-- palmrun then resubmits the continuation (_p3dr). Needs palmrun -t <cpumax>, else no restart fires.
+         termination_time_needed = 1000.0,
+         restart_data_format = 'mpi',
+
+!-- ALM mode: PALM step = OpenFAST DT (0.015625 s), 1:1, so the coupler does one FAST sub-step and one
+!-- actuator line per PALM step (n_sector = 1). Far below the CFL limit (~0.1 s for this inflow).
+         dt = 0.015625,
+
+         netcdf_data_format = 5,                ! parallel netCDF4
+         interpolate_to_grid_center = .TRUE.,   ! u, v, w, ti on the cell centres
+
+!-- yz planes: 1D upstream, rotor (378 m), 1D-6D downstream; upstream planes give u(z).
+         section_yz = 80, 160, 240, 320, 400, 480, 560, 640, 720,
+         section_xz = 320,                      ! centreline, y = 504 m
+         section_xy = 320,                      ! hub height, z = 504 m
+
+         data_output = 'u_yz', 'v_yz', 'w_yz',
+                       'u_xz', 'w_xz', 'u_xy',
+                       'u_yz_av', 'v_yz_av', 'w_yz_av',
+                       'u_xz_av', 'w_xz_av', 'u_xy_av',
+
+         dt_do2d_yz = 5.0,
+         dt_do2d_xz = 5.0,
+         dt_do2d_xy = 5.0,
+
+!-- Upstream profiles (u,v,w) on the rotor axis at x = 2, 126, 252 m, all z, to verify the inflow.
+         data_output_masks(1,:) = 'u', 'v', 'w',
+         mask_x(1,:) = 2.0, 126.0, 252.0,
+         mask_y(1,1) = 504.0,
+         dt_domask(1) = 10.0,
+
+!-- Last-revolution 3D (u,v,w,ti) over the rotor sub-volume only: x [-1D,+3D], y [+-1.5D],
+!-- z [+-2D] about the rotor. ~24.8 M cells, ~0.4 GB/frame; every PALM step -> ~159 frames, ~63 GB.
+         data_output_masks(2,:) = 'u', 'v', 'w', 'ti',
+         mask_x_loop(2,:) = 252.0, 756.0, 1.575,
+         mask_y_loop(2,:) = 315.0, 693.0, 1.575,
+         mask_z_loop(2,:) = 252.0, 756.0, 1.575,
+         dt_domask(2) = 0.03125,                ! every 2nd PALM step now (dt = 0.015625); set 0.015625 for every step
+         skip_time_domask(2) = 295.0413,
+
+!-- Average over the last 20 revolutions (99.17 s).
+         dt_data_output_av  = 300.0,
+         averaging_interval = 99.1736,
+         dt_averaging_input = 0.0,
+         /
+
+ &fastv8_coupler_parameters
+    switch_off_module      = .FALSE.,
+    nturbines              = 1,
+    time_turbine_on        = 0.0,
+    fast_n_blades_max      = 3,
+    fast_n_blade_elem_max  = 64,                ! AD15 NREL 5 MW blade nodes
+!-- OpenFAST server endpoint (host-specific; must match the running OpenFAST instance).
+    fast_host_addr_default = '10.28.7.1',
+    fast_host_port         = '21107',                    ! = PORT_FAST in the OpenFAST palm_connection_info.dat (unique per case)
+
+!-- Turbine tower-base position (m). Hub at 504 m is set via ElastoDyn TowerHt.
+    palm_tower_ref_pos_x = 378.0,               ! 3D from the inlet
+    palm_tower_ref_pos_y = 504.0,               ! centred
+    palm_tower_ref_pos_z = 0.0,
+
+    reg_fac  = 4.0,                             ! epsilon = 4*dx = 6.3 m = R/10 (Meyer-Forsting)
+    fbox_fac = 1.5,                             ! box half-edge 94.5 m: ~31 m margin > 3*epsilon (18.9 m) past the 63 m tip
+
+!-- Tower aerodynamics off.
+    dtow         = 0.0,
+    htow         = 0.0,
+    turb_C_d_tow = 0.0,
+
+    use_near_wake_smearing_correction = .FALSE., ! near-wake smearing correction OFF (no-correction baseline)
+
+!-- Turbine NetCDF output (loads/positions per blade element), written every PALM step.
+    output_interval          = 1,
+    output_use_fast_timestep = .FALSE.,         ! .FALSE. = once per PALM step (not per FAST sub-step)
+    output_sync_per_write    = .FALSE.,
+ /
+
+!-- Empty, but required for restart: it sets user_module_enabled = .TRUE., which makes PALM call the
+!-- user-module restart hooks (user_wrd_global/user_rrd_global) that save and restore the coupler
+!-- state (first_restart_with_wt). Without this namelist the coupler restart is silently skipped.
+ &user_parameters
+ /

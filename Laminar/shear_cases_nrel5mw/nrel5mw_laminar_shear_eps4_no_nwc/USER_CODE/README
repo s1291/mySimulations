@@ -1,0 +1,8 @@
+Usercode with NWC and restart
+
+Three different starts are possible:
+- "Normal" start, no restart, i.e. initializing_actions=set_constant_profiles
+- Restart, where the previous run was already a coupled run (first_restart_with_wt=.F.)
+- Restart, where the previous run was without turbine, for example to establish flow over surface heterogenities, here in &fastv8_coupler_parameters: first_restart_with_wt = .T. and in init_parameters: restart_data_format_output='fortran_binary', so that the written restart data containing NWC variables is working
+
+Currently (January 2025), only restart_data_format='fortran_binary' works

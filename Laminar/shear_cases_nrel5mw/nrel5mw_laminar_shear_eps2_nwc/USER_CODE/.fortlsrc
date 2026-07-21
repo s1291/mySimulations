@@ -1,0 +1,9 @@
+{
+  "source_dirs": [
+    "./**",
+    "/projects/extern/nhr/nhr_ni/nik00096/dir.project/palm/25.10.1/palm_model_system/packages/palm/model/src/**"
+  ],
+  "excl_paths": [
+   "/projects/extern/nhr/nhr_ni/nik00096/dir.project/palm/25.10.1/palm_model_system/packages/palm/model/src/*fastv8*.f90"
+  ]
+}

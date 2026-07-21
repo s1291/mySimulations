@@ -1,0 +1,103 @@
+------- AERODYN v15 for OpenFAST INPUT FILE -----------------------------------------------
+NREL 5.0 MW baseline. PALM-coupled actuator-line setup, AD15 path. See PORT_TO_AERODYN_15.md Sect. 4 for the rationale of every PALM-required override.
+======  General Options  ============================================================================
+False         Echo               - Echo the input to "<rootname>.AD.ech"?  (flag)
+"default"     DTAero             - Time interval for aerodynamic calculations {or "default"} (s)
+          0   WakeMod            - PALM port (Sect. 3.5 validator): MUST be 0. PALM's actuator-line accounts for induction via the LES; BEMT/DBEMT/OLAF here would double-count.
+          2   AFAeroMod          - Beddoes-Leishman dynamic stall enabled (UAMod = 3, Minnema/Pierce variant). AD15 itself models the unsteady airfoil response while NWC in PALM still uses the static polars in PalmNWC/ for bound-circulation calc.
+          0   TwrPotent          - PALM port (Sect. 3.5 validator): MUST be 0. PALM has no tower mesh.
+          0   TwrShadow          - PALM port (Sect. 3.5 validator): MUST be 0. Same reason.
+      False   TwrAero            - PALM port (Sect. 3.5 validator): MUST be False. Same reason.
+False         FrozenWake         - PALM port (Sect. 3.5 validator): MUST be False. Same induction-double-count reason as WakeMod.
+False         CavitCheck         - PALM port (Sect. 3.5 validator): MUST be False. PALM atmospheric LES coupling does not model cavitation.
+False         Buoyancy           - Onshore atmospheric run, no buoyancy.
+False         CompAA             - No aero-acoustics.
+"unused"      AA_InputFile       - AeroAcoustics input file [used only when CompAA=true]
+======  Environmental Conditions  ===================================================================
+"default"     AirDens            - Air density (kg/m^3). "default" pulls from FAST .fst (1.225 here).
+"default"     KinVisc            - Kinematic viscosity of working fluid (m^2/s)
+"default"     SpdSound           - Speed of sound in working fluid (m/s)
+"default"     Patm               - Atmospheric pressure (Pa)
+"default"     Pvap               - Vapour pressure of working fluid (Pa)
+======  Blade-Element/Momentum Theory Options  ====================================================== [unused when WakeMod=0 or 3]
+          1   SkewMod            - PALM port (Sect. 3.5 validator): MUST be 1 (no skew correction). Skew correction needs disk-averaged inflow that has not been validated through the PALM path yet (PORT_TO_AERODYN_15.md Q5).
+"default"     SkewModFactor      - [unused when SkewMod=1]
+       True   TipLoss            - [unused when WakeMod=0]
+       True   HubLoss            - [unused when WakeMod=0]
+       True   TanInd             - [unused when WakeMod=0]
+       True   AIDrag             - [unused when WakeMod=0]
+       True   TIDrag             - [unused when WakeMod=0]
+"Default"     IndToler           - [unused when WakeMod=0]
+        100   MaxIter            - [unused when WakeMod=0]
+======  Dynamic Blade-Element/Momentum Theory Options  ============================================== [used only when WakeMod=2]
+          2   DBEMT_Mod          - [unused when WakeMod=0]
+          4   tau1_const         - [unused when WakeMod=0]
+======  OLAF -- cOnvecting LAgrangian Filaments (Free Vortex Wake) Theory Options  ================== [used only when WakeMod=3]
+"unused"      OLAFInputFileName  - [unused when WakeMod=0]
+======  Beddoes-Leishman Unsteady Airfoil Aerodynamics Options  ===================================== [used only when AFAeroMod=2]
+          3   UAMod              - Minnema/Pierce unsteady-aerodynamics model. Active under AFAeroMod=2.
+True          FLookup            - Flag to use a lookup for f prime. Active under AFAeroMod=2.
+======  Airfoil Information =========================================================================
+          1   AFTabMod           - 1D interpolation on AoA (first table only)
+          1   InCol_Alfa         - The column in the airfoil tables that contains the angle of attack (-)
+          2   InCol_Cl           - The column in the airfoil tables that contains the lift coefficient (-)
+          3   InCol_Cd           - The column in the airfoil tables that contains the drag coefficient (-)
+          4   InCol_Cm           - The column in the airfoil tables that contains the pitching-moment coefficient
+          0   InCol_Cpmin        - The column in the airfoil tables that contains the Cpmin coefficient
+          8   NumAFfiles         - Number of airfoil files used (-)
+"Airfoils/Cylinder1.dat"    AFNames            - Airfoil file names (NumAFfiles lines) (quoted strings)
+"Airfoils/Cylinder2.dat"
+"Airfoils/DU40_A17.dat"
+"Airfoils/DU35_A17.dat"
+"Airfoils/DU30_A17.dat"
+"Airfoils/DU25_A17.dat"
+"Airfoils/DU21_A17.dat"
+"Airfoils/NACA64_A17.dat"
+======  Rotor/Blade Properties  =====================================================================
+True          UseBlCm            - Include aerodynamic pitching moment in calculations?  (flag)
+"AeroDyn_blade.dat"    ADBlFile(1)        - Name of file containing distributed aerodynamic properties for Blade #1 (-)
+"AeroDyn_blade.dat"    ADBlFile(2)        - Name of file containing distributed aerodynamic properties for Blade #2 (-) [unused if NumBl < 2]
+"AeroDyn_blade.dat"    ADBlFile(3)        - Name of file containing distributed aerodynamic properties for Blade #3 (-) [unused if NumBl < 3]
+======  Hub Properties ============================================================================== [used only when Buoyancy=True]
+0.0   VolHub             - Hub volume (m^3)
+0.0   HubCenBx           - Hub center of buoyancy x direction offset (m)
+======  Nacelle Properties ========================================================================== [used only when Buoyancy=True]
+0.0   VolNac             - Nacelle volume (m^3)
+0,0,0 NacCenB            - Position of nacelle center of buoyancy from yaw bearing in nacelle coordinates (m)
+======  Tail fin Aerodynamics ========================================================================
+False         TFinAero           - Calculate tail fin aerodynamics model (flag)
+"unused"      TFinFile           - Input file for tail fin aerodynamics [used only when TFinAero=True]
+======  Tower Influence and Aerodynamics ============================================================ [used only when TwrPotent/=0, TwrShadow/=0, TwrAero=True, or Buoyancy=True]
+          0   NumTwrNds         - Tower aerodynamics disabled under PALM (Sect. 3.5 validator).
+TwrElev        TwrDiam        TwrCd          TwrTI          TwrCb
+(m)              (m)           (-)            (-)           (-)
+======  Outputs  ====================================================================================
+True          SumPrint            - Generate a summary file listing input options and interpolated properties to "<rootname>.AD.sum"?  (flag)
+          0   NBlOuts             - Number of blade node outputs [0 - 9] (-)
+          1,    8,   16,   24,   32,   40,   48,   56,   64    BlOutNd             - [unused: NBlOuts=0; full nodal output below covers all 64 nodes]
+          0   NTwOuts             - Number of tower node outputs [0 - 9]  (-)
+          1,          2,          6    TwOutNd             - [unused: NTwOuts=0]
+                   OutList             - The next line(s) contains a list of output parameters.  See OutListParameters.xlsx for a listing of available output channels, (-)
+"RtAeroFxh"
+"RtAeroFyh"
+"RtAeroFzh"
+"RtAeroMxh"
+"RtAeroMyh"
+"RtAeroMzh"
+"RtAeroPwr"
+"RtArea"
+END of input file (the word "END" must appear in the first 3 columns of this last OutList line)
+
+---------------------- NODE OUTPUTS --------------------------------------------
+          3   BldNd_BladesOut   - Blades to output
+         99   BldNd_BlOutNd   - Blade nodes on each blade (currently unused)
+              OutList     - The next line(s) contains a list of output parameters.
+"Alpha"
+"Cl"
+"Cd"
+"Vrel"
+"Fx"
+"Fy"
+"DynP"
+"Theta"
+END of input file (the word "END" must appear in the first 3 columns of this last OutList line)

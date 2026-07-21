@@ -1,0 +1,83 @@
+!#### CHILD L2 (id 3, 2 m). 1184 x 352 x 256 m; root corner (1512,1424). contains OPUS1 turbine.
+!#  LOCAL coords: turbine (488,176), inflow mast (256,176), hub z = 92 m.
+ &initialization_parameters
+         nx = 591,
+         ny = 175,
+         nz = 128,
+         dx = 2.0,
+         dy = 2.0,
+         dz = 2.0,
+
+         psolver = 'multigrid',
+!        lateral/top BCs are set automatically by the nesting
+         neutral = .FALSE.,
+         constant_flux_layer = .TRUE.,
+         surface_heatflux = 0.0,                    ! neutral: zero surface heat flux
+         bc_pt_b = 'neumann',
+         roughness_length = 0.1,
+         omega = 7.29212e-5,
+         latitude = 53.83,
+         ug_surface = 8.73,
+         vg_surface = -2.47,
+         initializing_actions = 'read_restart_data',
+ /
+ &runtime_parameters
+         end_time = 4880.0, ! was 8480.5
+         dt = 0.03125, ! matching openfast here to run in ALM mode
+         npex = 8,
+         npey = 22,
+         restart_data_format_input = 'mpi',
+         restart_data_format = 'mpi',
+         termination_time_needed = 2600.0,
+         netcdf_data_format = 5,
+         interpolate_to_grid_center = .TRUE.,
+         section_yz = 128, 244, 302, 360, 418, 476, 534,
+         section_xy = 46,
+         section_xz = 88,
+         data_output = 'u_yz_av','v_yz_av','w_yz_av','u_xy_av','v_xy_av','u_xz_av','w_xz_av','u_yz','v_yz','w_yz','u_xy', 'p_xy_av', 'p_yz_av',
+         dt_do2d_yz = 2.0,
+         dt_do2d_xy = 2.0,
+         dt_do2d_xz = 2.0,
+         dt_data_output_av = 3600.0, ! was 7200.0
+         averaging_interval = 3600.0,! was 7200.0
+         skip_time_data_output_av = 1280.0,
+         dt_averaging_input = 0.0,
+         data_output_masks(1,:) = 'u_av','v_av','w_av',
+         mask_x(1,:) = 256.0,
+         mask_y(1,1) = 176.0,
+         dt_domask(1) = 7200.0,
+         skip_time_domask(1) = 1280.0,
+         data_output_masks(2,:) = 'u','v','w',
+         mask_x(2,:) = 256.0,
+         mask_y(2,1) = 176.0,
+         dt_domask(2) = 2.0,
+         data_output_masks(3,:) = 'u_av','v_av','w_av',
+         mask_x_loop(3,:) = 372.0, 836.0, 2.0,
+         mask_y_loop(3,:) = 2.0, 350.0, 2.0,
+         mask_z_loop(3,:) = 2.0, 250.0, 2.0,
+         dt_domask(3) = 7200.0,
+         skip_time_domask(3) = 1280.0,
+ /
+ &fastv8_coupler_parameters
+         switch_off_module = .FALSE.,
+         nturbines = 1,
+         time_turbine_on =   0.0,
+         fast_n_blades_max = 3,
+         fast_n_blade_elem_max = 57,
+         fast_host_addr_default = '10.241.201.7',
+         fast_host_port = '25023',
+         palm_tower_ref_pos_x = 488.0,
+         palm_tower_ref_pos_y = 176.0,
+         palm_tower_ref_pos_z = 0.0,
+         reg_fac = 2.0,
+         fbox_fac = 1.5,
+         dtow = 4.0,
+         htow = 90.0,
+         turb_C_d_tow = 0.6,
+         use_near_wake_smearing_correction = .FALSE.,
+         output_interval = 100,
+         output_use_fast_timestep = .FALSE.,
+         output_sync_per_write = .FALSE.,
+ /
+ &user_parameters
+ /

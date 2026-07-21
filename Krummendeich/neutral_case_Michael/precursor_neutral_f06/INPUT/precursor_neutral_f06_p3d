@@ -1,0 +1,78 @@
+ &initialization_parameters
+!-- Krummendeich F06 precursor: Alletto (2026) Fig 1 right, 2024-02-06 22:30 UTC.
+!-- Neutral replication, target U(92 m) = 11 m/s, z0 = 0.05 m, z_i = 1000 m. See README.
+         nx = 599, ny = 399, nz = 500,          ! 4800 x 3200 x 4000 m, uniform 8 m
+         dx = 8.0, dy = 8.0, dz = 8.0,
+
+         bc_lr = 'cyclic', bc_ns = 'cyclic',    ! periodic precursor
+         bc_uv_t = 'neumann',                   ! free-slip top (PALM default is dirichlet)
+
+!-- Neutral = zero surface heat flux with the theta equation active (not neutral = .T., which drops
+!-- the theta equation and so the capping inversion). See README.
+         surface_heatflux = 0.0,
+         bc_pt_b          = 'neumann',
+
+!-- Well mixed below 1000 m, 1 K/km above (PALM gradient is K per 100 m, so 0.1 = 1 K/km). 279.5 K
+!-- is the mast value for the stamp; the absolute value does not enter the dynamics.
+         pt_surface                 = 279.5,
+         pt_vertical_gradient       = 0.1,
+         pt_vertical_gradient_level = 1000.0,
+
+         roughness_length = 0.05,               ! figure header
+         latitude         = 53.83,
+
+!-- ug_surface is only the initial seed; the controller below sets ug/vg every step to hold
+!-- U(92 m) = target_u. 15.7 is the neutral drag-law estimate for 11 m/s (see README).
+         initializing_actions = 'set_constant_profiles',
+         ug_surface = 15.7, vg_surface = 0.0,
+ /
+
+ &flow_control_parameters
+!-- Geostrophic wind controller (PALM 25.04+): holds the horizontal-mean wind at target_height on
+!-- target_u/target_v. Requires cyclic BC, flat topography, rayleigh_damping_factor = 0 (so the
+!-- Rayleigh block is removed) and a nonzero inertial_oscillation_damping_factor (below).
+!-- kp/ki are the 25.10.1 defaults, set explicitly.
+    geostrophic_wind_controller = .TRUE.,
+    kp            = 10.0,
+    ki            = 20.0,
+    target_height = 92.0,
+    target_u      = 11.0,
+    target_v      = 0.0,
+ /
+
+ &damping_parameters
+    inertial_oscillation_damping_factor = 0.9,  ! required nonzero by the controller; speeds inertial decay
+ /
+
+ &runtime_parameters
+         end_time = 43200.0,                    ! 12 h first leg; raise in the _p3dr to extend. See README.
+
+!-- Restart fires on the job wall-clock limit (termination_time_needed, palmrun -t); the successor
+!-- reads these files via cyclic_fill. Run with the "restart" activation string so BINOUT is written.
+         termination_time_needed = 600.0,
+         restart_data_format     = 'mpi',
+
+         npex = 50, npey = 40,                  ! 2000 ranks, balanced for 600 x 400 x 500. See README.
+         dt_disturb = 150.0,                    ! perturbation seeding; stops itself past disturbance_energy_limit
+
+         dt_dopr               = 900.0,         ! 15 min averaged profiles, the spin-up checks
+         averaging_interval_pr = 900.0,
+         data_output_pr = 'u', 'v', 'w', 'theta', 'wtheta', 'wu', 'wv',
+                          'u*2', 'v*2', 'w*2', 'e', 'e*',
+
+         netcdf_data_format = 5,                ! parallel netCDF4 for the 2D slices below
+
+!-- Streak check (see README, "Checking for locked streamwise streaks"). section_*_m set the plane
+!-- positions in metres, so they survive a resolution change (PALM maps each to the nearest level).
+!-- The hub-height xy slice is the main view; the mid-domain yz slice adds the vertical extent. The
+!-- *_av fields are the 1 h means, where locked streaks show up as stationary spanwise bands. Each
+!-- slice is one plane per frame, so the cost is negligible.
+         section_xy_m       = 92.0,             ! hub height
+         section_yz_m       = 2400.0,           ! mid-domain x
+         data_output        = 'u_xy', 'u_xy_av', 'u_yz', 'u_yz_av',
+         dt_do2d_xy         = 1800.0,
+         dt_do2d_yz         = 1800.0,
+         dt_data_output_av  = 3600.0,
+         averaging_interval = 3600.0,
+         dt_averaging_input = 0.0,
+ /

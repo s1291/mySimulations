@@ -1,0 +1,76 @@
+ &initialization_parameters
+!-- Neutral M23 precursor case.
+         nx = 599, ny = 399, nz = 500,
+         ! Domain size: 4.8 x 3.2 x 4.0 km.
+         dx = 8.0, dy = 8.0, dz = 8.0,
+
+         bc_lr = 'cyclic', bc_ns = 'cyclic',
+         ! Periodic sides and free-slip top.
+         bc_uv_t = 'neumann',
+
+         surface_heatflux = 0.0,
+         ! No surface heat flux.
+         bc_pt_b          = 'neumann',
+
+         pt_surface                 = 278.7,
+         pt_vertical_gradient       = 0.1,
+         ! Mixed below 1000 m; weak lapse rate above.
+         pt_vertical_gradient_level = 1000.0,
+
+         roughness_length = 0.1,
+         latitude         = 53.83,
+
+         initializing_actions = 'set_constant_profiles',
+         ! Start from a constant wind profile.
+         ug_surface = 10.0, vg_surface = 0.0,
+ /
+
+ &flow_control_parameters
+    ! Controller keeps hub-height wind near the target.
+    geostrophic_wind_controller = .TRUE.,
+    kp            = 10.0,
+    ki            = 20.0,
+    target_height = 92.0,
+    target_u      = 7.0,
+    target_v      = 0.0,
+ /
+
+ &damping_parameters
+    ! Needed by the wind controller.
+    inertial_oscillation_damping_factor = 0.9,
+ /
+
+ &runtime_parameters
+         ! First 12-hour leg.
+         end_time = 43200.0,
+
+         termination_time_needed = 600.0,
+         ! Stop before the wall-clock limit so restart can continue.
+         restart_data_format     = 'mpi',
+
+         npex = 50, npey = 40,
+         ! 2000 ranks.
+         dt_disturb = 150.0,
+         ! Seed turbulence during spin-up.
+
+         dt_dopr               = 900.0,
+         ! 15-minute profile output.
+         averaging_interval_pr = 900.0,
+         data_output_pr = 'u', 'v', 'w', 'theta', 'wtheta', 'wu', 'wv',
+                          'u*2', 'v*2', 'w*2', 'e', 'e*',
+
+         ! Parallel netCDF for 2D slices.
+         netcdf_data_format = 5,
+
+         section_xy_m       = 92.0,
+         ! Hub-height slice.
+         section_yz_m       = 2400.0,
+         ! Mid-domain x slice.
+         data_output        = 'u_xy', 'u_xy_av', 'u_yz', 'u_yz_av',
+         dt_do2d_xy         = 1800.0,
+         dt_do2d_yz         = 1800.0,
+         dt_data_output_av  = 3600.0,
+         averaging_interval = 3600.0,
+         dt_averaging_input = 0.0,
+ /
+ 

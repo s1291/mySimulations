@@ -1,0 +1,68 @@
+!#### CHILD L2 (id 3, 2 m). 1184 x 352 x 256 m; root corner (1512,1424).contains the NREL 5MW turbine. 
+!#  LOCAL coords: turbine (488,176), inflow mast (256,176), hub z = 92 m.
+ &initialization_parameters
+         nx = 591,
+         ny = 175,
+         nz = 128,
+         dx = 2.0,
+         dy = 2.0,
+         dz = 2.0,
+
+         psolver = 'multigrid',
+!        lateral/top BCs are set automatically by the nesting 
+         neutral = .FALSE.,
+         constant_flux_layer = .TRUE.,
+         surface_heatflux = 0.0,                    ! neutral: zero surface heat flux 
+         bc_pt_b = 'neumann',
+         roughness_length = 0.1,
+         omega = 7.29212e-5,
+         latitude = 53.83,
+         initializing_actions = 'interpolate_from_parent',
+ /
+ &runtime_parameters
+         end_time = 3000.5, ! 50 minutes (first 20 min discarded)   
+         dt = 0.03125,
+         npex = 8,
+         npey = 22,
+         restart_data_format = 'mpi',
+         termination_time_needed = 2600.0,
+         netcdf_data_format = 5,
+         interpolate_to_grid_center = .TRUE.,
+         section_xy_m = 90.0,
+         data_output = 'u_xy','u_xy_av','v_xy_av','p_xy_av',
+         dt_do2d_xy = 10.0,
+         dt_data_output_av = 3600.0,  
+         averaging_interval = 3600.0,
+         skip_time_data_output_av = 1200.0, ! skip 20 min
+         dt_averaging_input = 0.0,
+         
+         data_output_masks(1,:) = 'u','v','w','p',
+         mask_x_loop(1,:) = 46.0, 740.0, 2.0,
+         mask_y_loop(1,:) = 2.0, 350.0, 2.0,
+         mask_z_loop(1,:) = 2.0, 160.0, 2.0,
+         dt_domask(1) = 1.0, ! output every 1s
+         skip_time_domask(1) = 1200.0,
+ /
+ &fastv8_coupler_parameters
+         switch_off_module = .FALSE.,
+         nturbines = 1,
+         time_turbine_on =  20.0, ! skipping first 20 secondes
+         fast_n_blades_max = 3,
+         fast_n_blade_elem_max = 64,
+         fast_host_addr_default = '10.241.201.7',
+         fast_host_port = '25135',
+         palm_tower_ref_pos_x = 488.0,
+         palm_tower_ref_pos_y = 176.0,
+         palm_tower_ref_pos_z = 0.0,
+         reg_fac = 2.0,   ! eps = reg_fac * dx
+         fbox_fac = 1.5,
+         dtow = 4.0,
+         htow = 88.0,
+         turb_C_d_tow = 0.9, 
+         use_near_wake_smearing_correction = .FALSE., ! disabled for this run until I fix the restart format from precursor
+         output_interval = 100, 
+         output_use_fast_timestep = .FALSE.,
+         output_sync_per_write = .FALSE.,
+ /
+ &user_parameters
+ /

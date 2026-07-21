@@ -1,0 +1,6 @@
+# Dependencies for tools/blade_viz.py
+numpy
+matplotlib          # static multi-panel figure (blade_overview.png)
+plotly              # interactive 2D + 3D HTML views
+# kaleido           # OPTIONAL: only needed for `--snapshots` PNG export of the
+                    # HTML views (also requires Chrome: `plotly_get_chrome`)

@@ -1,0 +1,221 @@
+! ------------ AirfoilInfo v1.01.x Input File ----------------------------------
+! AeroDyn15 polar file, created from Blade2OpenFAST.py on 03-Aug-2025 02:24:48
+! line
+! line
+! ------------------------------------------------------------------------------
+DEFAULT                  InterpOrd   ! Interpolation order to use for quasi-steady table lookup {1=linear; 3=cubic spline; "default"} [default=3]
+1                        NonDimArea  ! The non-dimensional area of the airfoil (area/chord^2) (set to 1.0 if unsure or unneeded)
+0                        NumCoords   ! The number of coordinates in the airfoil shape file. Set to zero if coordinates not included.
+"unused"                 BL_file     ! The file name including the boundary layer characteristics of the profile. Ignored if the aeroacoustic module is not called.
+1                        NumTabs     ! Number of airfoil tables in this file.  Each table must have lines for Re and Ctrl.
+! ------------------------------------------------------------------------------
+! 0.55267_EC128_EC122__99999_25.0_
+! ------------------------------------------------------------------------------
+     5.0                 Re          ! Reynolds number in millions
+0                        Ctrl        ! Control setting (must be 0 for current AirfoilInfo)
+True                    InclUAdata  ! Is unsteady aerodynamics data included in this table? If TRUE, then include 30 UA coefficients below this line
+!........................................
+1.000000                  eta_e       ! Recovery factor in the range [0.85 - 0.95] used only for UAMOD=1, it is set to 1 in the code when flookup=True. (-)
+Default                  T_f0        ! Initial value of the time constant associated with Df in the expression of Df and f. [default = 3]
+Default                  T_V0        ! Initial value of the time constant associated with the vortex lift decay process; it is used in the expression of Cvn. It depends on Re,M, and airfoil class. [default = 6]
+Default                  T_p         ! Boundary-layer,leading edge pressure gradient time constant in the expression of Dp. It should be tuned based on airfoil experimental data. [default = 1.7]
+Default                  T_VL        ! Initial value of the time constant associated with the vortex advection process; it represents the non-dimensional time in semi-chords, needed for a vortex to travel from LE to trailing edge (TE); it is used in the expression of Cvn. It depends on Re, M (weakly), and airfoil. [valid range = 6 - 13, default = 11]
+Default                  b1          ! Constant in the expression of phi_alpha^c and phi_q^c.  This value is relatively insensitive for thin airfoils, but may be different for turbine airfoils. [from experimental results, defaults to 0.14]
+Default                  b2          ! Constant in the expression of phi_alpha^c and phi_q^c.  This value is relatively insensitive for thin airfoils, but may be different for turbine airfoils. [from experimental results, defaults to 0.53]
+Default                  b5          ! Constant in the expression of K'''_q,Cm_q^nc, and k_m,q.  [from  experimental results, defaults to 5]
+Default                  A1          ! Constant in the expression of phi_alpha^c and phi_q^c.  This value is relatively insensitive for thin airfoils, but may be different for turbine airfoils. [from experimental results, defaults to 0.3]
+Default                  A2          ! Constant in the expression of phi_alpha^c and phi_q^c.  This value is relatively insensitive for thin airfoils, but may be different for turbine airfoils. [from experimental results, defaults to 0.7]
+Default                  A5          ! Constant in the expression of K'''_q,Cm_q^nc, and k_m,q. [from experimental results, defaults to 1]
+0.000000                 S1          ! Constant in the f curve best-fit for alpha0<=AOA<=alpha1; by definition it depends on the airfoil. [ignored if UAMod<>1]
+0.000000                 S2          ! Constant in the f curve best-fit for         AOA> alpha1; by definition it depends on the airfoil. [ignored if UAMod<>1]
+0.000000                 S3          ! Constant in the f curve best-fit for alpha2<=AOA< alpha0; by definition it depends on the airfoil. [ignored if UAMod<>1]
+0.000000                 S4          ! Constant in the f curve best-fit for         AOA< alpha2; by definition it depends on the airfoil. [ignored if UAMod<>1]
+Default                  St_sh       ! Strouhal's shedding frequency constant.  [default = 0.19]
+0.000000                 k0          ! Constant in the \hat(x)_cp curve best-fit; = (\hat(x)_AC-0.25).  [ignored if UAMod<>1]
+0.000000                 k1          ! Constant in the \hat(x)_cp curve best-fit.  [ignored if UAMod<>1]
+0.000000                 k2          ! Constant in the \hat(x)_cp curve best-fit.  [ignored if UAMod<>1]
+0.000000                 k3          ! Constant in the \hat(x)_cp curve best-fit.  [ignored if UAMod<>1]
+0.000000                 k1_hat      ! Constant in the expression of Cc due to leading edge vortex effects.  [ignored if UAMod<>1]
+Default                  x_cp_bar    ! Constant in the expression of \hat(x)_cp^v. [ignored if UAMod<>1, default = 0.2]
+Default                  UACutout    ! Angle of attack above which unsteady aerodynamics are disabled (deg). [Specifying the string "Default" sets UACutout to 45 degrees]
+Default                  filtCutOff  ! Cut-off frequency (-3 dB corner frequency) for low-pass filtering the AoA input to UA, as well as the 1st and 2nd derivatives (Hz) [default = 20]
+!........................................
+! Table of aerodynamics coefficients
+175                      NumAlf      ! Number of data lines in the following table
+!    Alpha      Cl        Cd        Cm
+!    (deg)      (-)       (-)       (-)
+   -180.000000     -0.359921      0.028730     -0.152967
+   -179.000000     -0.280153      0.029059     -0.118305
+   -178.000000     -0.200385      0.029972     -0.083917
+   -177.000000     -0.120616      0.031468     -0.049825
+   -176.000000     -0.040848      0.033549     -0.016042
+   -175.000000      0.038922      0.036246      0.017397
+   -174.000000      0.118689      0.039567      0.050467
+   -173.000000      0.198462      0.043472      0.083176
+   -172.000000      0.278235      0.047963      0.115513
+   -171.000000      0.357999      0.053051      0.147445
+   -170.000000      0.430173      0.059156      0.175950
+   -169.000000      0.418342      0.072529      0.171344
+   -168.000000      0.395265      0.094442      0.163193
+   -167.000000      0.383635      0.123323      0.160516
+   -166.000000      0.375728      0.157512      0.160175
+   -165.000000      0.372892      0.195263      0.162584
+   -164.000000      0.379029      0.234684      0.168996
+   -163.000000      0.395642      0.274031      0.179694
+   -162.000000      0.420910      0.311608      0.193666
+   -161.000000      0.452859      0.345592      0.209811
+   -160.000000      0.489338      0.374119      0.226929
+   -157.000000      0.603717      0.444106      0.277313
+   -154.000000      0.680274      0.515276      0.313549
+   -151.000000      0.706274      0.587305      0.332688
+   -148.000000      0.722014      0.659388      0.348933
+   -145.000000      0.728984      0.730830      0.362827
+   -142.000000      0.727725      0.800996      0.374542
+   -139.000000      0.718742      0.869322      0.384266
+   -136.000000      0.702610      0.935303      0.392161
+   -133.000000      0.679803      0.998473      0.398351
+   -130.000000      0.650877      1.058458      0.402976
+   -127.000000      0.616336      1.114953      0.406151
+   -124.000000      0.576671      1.167497      0.407986
+   -121.000000      0.532408      1.215991      0.408576
+   -118.000000      0.483999      1.260235      0.408016
+   -115.000000      0.431932      1.299879      0.406386
+   -112.000000      0.376660      1.334825      0.403756
+   -109.000000      0.318658      1.365020      0.400206
+   -106.000000      0.258357      1.390314      0.395791
+   -103.000000      0.196187      1.410511      0.390571
+   -100.000000      0.132597      1.425657      0.384606
+    -97.000000      0.067991      1.435753      0.377942
+    -94.000000      0.002795      1.440700      0.370627
+    -91.000000     -0.062583      1.440548      0.362707
+    -88.000000     -0.127729      1.435297      0.354217
+    -85.000000     -0.192258      1.424946      0.345208
+    -82.000000     -0.255736      1.409595      0.335698
+    -79.000000     -0.317785      1.389295      0.325739
+    -76.000000     -0.377989      1.364146      0.315349
+    -73.000000     -0.435938      1.334197      0.304564
+    -70.000000     -0.491232      1.299699      0.293420
+    -67.000000     -0.543461      1.260751      0.281935
+    -64.000000     -0.592186      1.217453      0.270141
+    -61.000000     -0.637012      1.170157      0.258061
+    -58.000000     -0.677492      1.118960      0.245726
+    -55.000000     -0.713194      1.064163      0.233157
+    -52.000000     -0.743706      1.006069      0.220392
+    -49.000000     -0.768538      0.945037      0.207443
+    -46.000000     -0.787291      0.881411      0.194348
+    -43.000000     -0.799746      0.815270      0.180971
+    -40.000000     -0.810123      0.741535      0.164691
+    -37.000000     -0.815921      0.654227      0.141551
+    -34.000000     -0.817837      0.556652      0.112470
+    -31.000000     -0.816581      0.455572      0.080679
+    -28.000000     -0.812651      0.357620      0.049355
+    -25.000000     -0.806547      0.269351      0.021647
+    -22.000000     -0.796247      0.197555      0.000436
+    -20.000000     -0.773898      0.158713     -0.013411
+    -19.000000     -0.767876      0.142501     -0.018489
+    -18.000000     -0.775403      0.129295     -0.021496
+    -17.000000     -0.783207      0.117366     -0.025901
+    -16.000000     -0.785504      0.104818     -0.032158
+    -15.000000     -0.791943      0.090763     -0.038952
+    -14.000000     -0.810620      0.074068     -0.047419
+    -13.000000     -0.840366      0.052719     -0.060252
+    -12.000000     -0.838006      0.034594     -0.072117
+    -11.000000     -0.779962      0.024159     -0.081403
+    -10.000000     -0.688558      0.017551     -0.088796
+     -9.000000     -0.580347      0.013182     -0.094226
+     -8.000000     -0.464123      0.010975     -0.098003
+     -7.000000     -0.344962      0.009991     -0.101127
+     -6.000000     -0.224528      0.009325     -0.103903
+     -5.000000     -0.103852      0.008860     -0.106423
+     -4.000000      0.016203      0.008550     -0.108645
+     -3.000000      0.135851      0.008343     -0.110670
+     -2.000000      0.255378      0.008189     -0.112574
+     -1.000000      0.374547      0.008038     -0.114353
+      0.000000      0.493250      0.007921     -0.115898
+      1.000000      0.611939      0.007871     -0.117321
+      2.000000      0.730171      0.007911     -0.118631
+      3.000000      0.846976      0.008055     -0.119631
+      4.000000      0.962112      0.008311     -0.120261
+      5.000000      1.075849      0.008656     -0.120611
+      6.000000      1.188910      0.009036     -0.120771
+      7.000000      1.300173      0.009422     -0.120616
+      8.000000      1.408687      0.009897     -0.120056
+      9.000000      1.514743      0.010524     -0.119166
+     10.000000      1.620454      0.011382     -0.118135
+     11.000000      1.718613      0.012685     -0.116340
+     12.000000      1.807138      0.014668     -0.113602
+     13.000000      1.881976      0.017900     -0.109745
+     14.000000      1.937258      0.023456     -0.104696
+     15.000000      1.473506      0.093295     -0.124816
+     16.000000      1.348209      0.119249     -0.128346
+     17.000000      1.322325      0.133703     -0.128533
+     18.000000      1.299317      0.148534     -0.128501
+     19.000000      1.282496      0.163674     -0.128927
+     20.000000      1.274726      0.179529     -0.130754
+     22.000000      1.251929      0.221413     -0.135152
+     25.000000      1.196747      0.302283     -0.141805
+     28.000000      1.125607      0.398396     -0.148685
+     31.000000      1.048453      0.503373     -0.156035
+     34.000000      0.975164      0.610745     -0.164078
+     37.000000      0.915867      0.714057     -0.173072
+     40.000000      0.880408      0.806918     -0.183231
+     43.000000      0.870619      0.883366     -0.196556
+     46.000000      0.857316      0.955017     -0.210911
+     49.000000      0.836927      1.024333     -0.225140
+     52.000000      0.809875      1.090781     -0.239195
+     55.000000      0.776692      1.154028     -0.253050
+     58.000000      0.737831      1.213725     -0.266695
+     61.000000      0.693760      1.269472     -0.280089
+     64.000000      0.644984      1.321020     -0.293204
+     67.000000      0.591928      1.368169     -0.306009
+     70.000000      0.535088      1.410616     -0.318478
+     73.000000      0.474898      1.448265     -0.330578
+     76.000000      0.411809      1.480814     -0.342293
+     79.000000      0.346259      1.508263     -0.353568
+     82.000000      0.278705      1.530365     -0.364388
+     85.000000      0.209590      1.547116     -0.374707
+     88.000000      0.139331      1.558367     -0.384492
+     91.000000      0.068394      1.564120     -0.393702
+     94.000000     -0.002794      1.564321     -0.402307
+     97.000000     -0.073780      1.558925     -0.410252
+    100.000000     -0.144123      1.547928     -0.417487
+    103.000000     -0.213359      1.531383     -0.423966
+    106.000000     -0.281035      1.509286     -0.429626
+    109.000000     -0.346697      1.481891     -0.434426
+    112.000000     -0.409829      1.448946     -0.438281
+    115.000000     -0.469987      1.410851     -0.441136
+    118.000000     -0.526646      1.367656     -0.442906
+    121.000000     -0.579320      1.319561     -0.443516
+    124.000000     -0.627505      1.266667     -0.442886
+    127.000000     -0.670610      1.209372     -0.440881
+    130.000000     -0.708196      1.147877     -0.437441
+    133.000000     -0.739623      1.082631     -0.432416
+    136.000000     -0.764381      1.013786     -0.425696
+    139.000000     -0.781939      0.941989     -0.417147
+    142.000000     -0.791622      0.867612     -0.406572
+    145.000000     -0.792992      0.791264     -0.393862
+    148.000000     -0.785321      0.713521     -0.378772
+    151.000000     -0.768136      0.635097     -0.361138
+    154.000000     -0.741051      0.556752     -0.340788
+    157.000000     -0.719620      0.479346     -0.323130
+    160.000000     -0.700166      0.403663     -0.307347
+    161.000000     -0.694360      0.372107     -0.301793
+    162.000000     -0.688969      0.334805     -0.295919
+    163.000000     -0.684044      0.293592     -0.290060
+    164.000000     -0.679623      0.250349     -0.284521
+    165.000000     -0.675793      0.206961     -0.279592
+    166.000000     -0.672633      0.165678     -0.275569
+    167.000000     -0.670143      0.128345     -0.272570
+    168.000000     -0.668706      0.096827     -0.270828
+    169.000000     -0.670074      0.072969     -0.271102
+    170.000000     -0.674473      0.058819     -0.273528
+    171.000000     -0.683501      0.053060     -0.278489
+    172.000000     -0.705073      0.047971     -0.288623
+    173.000000     -0.716000      0.043469     -0.294536
+    174.000000     -0.713840      0.039555     -0.295146
+    175.000000     -0.723397      0.036233     -0.300577
+    176.000000     -0.679165      0.033558     -0.283628
+    177.000000     -0.599357      0.031470     -0.251549
+    178.000000     -0.519543      0.029970     -0.219065
+    179.000000     -0.439735      0.029056     -0.186206
+    180.000000     -0.359921      0.028730     -0.152967

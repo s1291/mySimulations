@@ -1,0 +1,70 @@
+------- InflowWind v3.05.* INPUT FILE -------------------------------------------------------------------------
+OpenFAST + PALM coupling, AD15, OpenFAST 3.5.5. WindType = 10.
+---------------------------------------------------------------------------------------------------------------
+False         Echo           - Echo input data to <RootName>.ech (flag)
+         10   WindType       - switch for wind file type (1=steady; 2=uniform; 3=binary TurbSim FF; 4=binary Bladed-style FF; 5=HAWC format; 10=PALM)
+          0   PropagationDir - Direction of wind propagation (deg)
+          0   VFlowAng       - Upflow angle (degrees)
+False         VelInterpCubic - Use cubic interpolation for velocity in time (boolean)
+          0   NWindVel       - Number of points to output the wind velocity (0 to 9)
+          0   WindVxiList    - List of coordinates in the inertial X direction (m)
+          0   WindVyiList    - List of coordinates in the inertial Y direction (m)
+          0   WindVziList    - List of coordinates in the inertial Z direction (m)
+================== Parameters for Steady Wind Conditions [used only for WindType = 1] =========================
+       11.0   HWindSpeed     - Horizontal windspeed (m/s)
+         92   RefHt          - Reference height for horizontal wind speed (m)
+        0.0   PLexp          - Power law exponent (-)
+================== Parameters for Uniform wind file [used only for WindType = 2] ==============================
+"unused"      FileName_Uni
+     90.0     RefHt_Uni
+    125.88    RefLength
+================== Parameters for Binary TurbSim Full-Field files [used only for WindType = 3] ===============
+"unused"      FileName_BTS
+================== Parameters for Binary Bladed-style Full-Field files [used only for WindType = 4] =========
+"unused"      FilenameRoot
+False         TowerFile
+================== Parameters for HAWC-format binary files [Only used with WindType = 5] =====================
+"unused"      FileName_u
+"unused"      FileName_v
+"unused"      FileName_w
+         64   nx
+         32   ny
+         32   nz
+         10   dx
+          3   dy
+          3   dz
+         92   RefHt_HAWC
+  ------------- Scaling parameters for turbulence -----------------------------------------------------------
+          0   ScaleMethod
+          1   SFx
+          1   SFy
+          1   SFz
+         12   SigmaFx
+          8   SigmaFy
+          2   SigmaFz
+  ------------- Mean wind profile parameters (added to HAWC-format files) -----------------------------------
+          8   URef
+          2   WindProfile
+        0.2   PLExp_Hawc
+       0.03   Z0
+          0   XOffset
+================== Parameters for PALM coupling [Only used with WindType = 10] =============================
+"palm_connection_info.dat" PALM_FileName  - Name of the PALM communication file (.srv) describing host/port for the TCP server
+================== LIDAR Parameters ===========================================================================
+          0   SensorType     - 0=none, 1=single point, 2=continuous wave, 3=pulsed
+          0   NumPulseGate
+       30.0   PulseSpacing
+          0   NumBeam
+          0   FocalDistanceX
+          0   FocalDistanceY
+          0   FocalDistanceZ
+0,0,0         RotorApexOffsetPos
+         10   URefLid
+       0.25   MeasurementInterval
+False         LidRadialVel
+          1   ConsiderHubMotion - Consider hub motion for lidar simulation (0=no, 1=yes)
+====================== OUTPUT ==================================================
+False         SumPrint
+              OutList
+END of input file (the word "END" must appear in the first 3 columns of this last OutList line)
+---------------------------------------------------------------------------------

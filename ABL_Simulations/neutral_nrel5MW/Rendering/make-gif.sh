@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-fps=1
+# This is an input option for an image sequence. It tells FFmpeg how long each input image should remain on screen and assigns timestamps to the images.
+framerate=12
 output="vorticity-mag-preview.gif"
 prefix="vorticity-mag"
 
@@ -42,7 +43,7 @@ IFS=x read -r width height < <(
 
 echo "Using ${#frames[@]} frames"
 echo "Dimensions: ${width}x${height}"
-echo "Frame rate: ${fps} fps"
+echo "Frame rate: ${framerate} "
 echo "Generating palette..."
 
 # Generate the palette after compositing the transparent PNGs over black.
@@ -50,10 +51,10 @@ ffmpeg \
     -hide_banner \
     -loglevel warning \
     -y \
-    -framerate "$fps" \
+    -framerate "$framerate" \
     -i "$tmp/frame-%06d.png" \
     -filter_complex \
-    "color=c=black:s=${width}x${height}:r=${fps}[bg];
+    "color=c=black:s=${width}x${height}:r=${framerate}[bg];
      [bg][0:v]overlay=shortest=1:eof_action=endall:format=auto,
      format=rgb24,
      palettegen=max_colors=256:stats_mode=full:reserve_transparent=0" \
@@ -68,11 +69,11 @@ ffmpeg \
     -hide_banner \
     -loglevel warning \
     -y \
-    -framerate "$fps" \
+    -framerate "$framerate" \
     -i "$tmp/frame-%06d.png" \
     -i "$tmp/palette.png" \
     -filter_complex \
-    "color=c=black:s=${width}x${height}:r=${fps}[bg];
+    "color=c=black:s=${width}x${height}:r=${framerate}[bg];
      [bg][0:v]overlay=shortest=1:eof_action=endall:format=auto,
      format=rgb24[opaque];
      [opaque][1:v]paletteuse=dither=sierra2_4a:diff_mode=rectangle[out]" \
